@@ -24,11 +24,13 @@ common:
           - -c
           - docker exec api_test_executor_${ENV_NAME} cucumber --tags=@${ENV_NAME} --format html --out test-output/report.html
     - exec: 
+        run_if: any
         command: bash
         arguments:
           - -c
           - docker cp api_test_executor_${ENV_NAME}:/usr/src/api-tests/test-output/report.html report_${ENV_NAME}.html
     - exec: 
+        run_if: any
         command: bash
         arguments:
           - -c
@@ -104,7 +106,7 @@ pipelines:
             test:
               artifacts:
                 - build:
-                    source: report_ord.html
+                    source: report_prd.html
                     destination: test-output
               tabs:
                 Report: test-output/report_prd.html
