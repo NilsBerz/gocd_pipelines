@@ -1,5 +1,13 @@
 ---
 format_version: 10
+common:
+  deploy-tasks: &deploy-tasks
+    - exec:
+        command: bash
+        argument:
+          - -c
+          - echo "Deploy on ${ENV_NAME} environment"
+
 pipelines:
   java_microservice:
     group: microservices
@@ -22,17 +30,14 @@ pipelines:
                       - -c
                       - echo "Building java app"
       - deploy-dev:
+          environment_variables:
+            ENV_NAME: DEV
           jobs:
-            build:
-              tasks:
-                - exec:
-                    command: bash
-                    arguments:
-                      - -c
-                      - echo "Deploy to DEV"
+            deploy:
+              tasks: *deploy-tasks
       - test-dev:
           jobs:
-            build:
+            test:
               tasks:
                 - exec:
                     command: bash
@@ -40,17 +45,14 @@ pipelines:
                       - -c
                       - echo "Running tests on DEV"
       - deploy-int:
+          environment_variables:
+            ENV_NAME: INT
           jobs:
-            build:
-              tasks:
-                - exec:
-                    command: bash
-                    arguments:
-                      - -c
-                      - echo "Deploy to INT"
+            deploy:
+              tasks: *deploy-tasks
       - test-int:
           jobs:
-            build:
+            test:
               tasks:
                 - exec:
                     command: bash
@@ -58,17 +60,14 @@ pipelines:
                       - -c
                       - echo "Running tests on INT"
       - deploy-prd:
+          environment_variables:
+            ENV_NAME: PRD
           jobs:
-            build:
-              tasks:
-                - exec:
-                    command: bash
-                    arguments:
-                      - -c
-                      - echo "Deploy to PRD"
+            deploy:
+              tasks: *deploy-tasks
       - test-prd:
           jobs:
-            build:
+            test:
               tasks:
                 - exec:
                     command: bash
